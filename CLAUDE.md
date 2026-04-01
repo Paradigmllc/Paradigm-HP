@@ -85,8 +85,13 @@ paradigmjp.com/
 ├── /pricing           ← 料金一覧（4カテゴリ×3プラン+料金補足Q&A）
 ├── /faq               ← よくある質問（10問のアコーディオンUI）
 ├── /works             ← 制作実績（6件のケーススタディ+メトリクス+タグ）
-├── /contact           ← お問い合わせ（フォーム+サイドバー+Cal.comリンク）
-├── /blog              ← ブログ（未実装 — Ghost連携 or MDX予定）
+├── /contact           ← お問い合わせ（フォーム+API送信+サイドバー+Cal.comリンク）
+├── /blog              ← ブログ一覧（4記事、カテゴリ/タグ/読了時間表示）
+│   └── /blog/[slug]   ← ブログ記事（Markdownレンダリング+BlogPosting JSON-LD）
+├── /lp/web            ← Web制作LP（ペインポイント+ソリューション+料金+CTA）
+├── /lp/meo            ← MEO対策LP（数値実績+対象業種+CTA）
+├── /lp/seo            ← SEO/GEO対策LP（SEO vs GEO比較+CTA）
+├── /lp/ai             ← AI導入支援LP（インパクト数値+FAQ+CTA）
 ├── /privacy           ← プライバシーポリシー（9条）
 └── /legal             ← 特定商取引法に基づく表記
 ```
@@ -115,6 +120,19 @@ paradigmjpcom/
 │   │   ├── pricing/page.tsx
 │   │   ├── privacy/page.tsx
 │   │   ├── works/page.tsx
+│   │   ├── blog/
+│   │   │   ├── page.tsx         ← ブログ一覧
+│   │   │   └── [slug]/page.tsx  ← ブログ記事（SSG）
+│   │   ├── lp/
+│   │   │   ├── web/page.tsx     ← Web制作LP
+│   │   │   ├── meo/page.tsx     ← MEO対策LP
+│   │   │   ├── seo/page.tsx     ← SEO/GEO LP
+│   │   │   └── ai/page.tsx      ← AI導入LP
+│   │   ├── api/
+│   │   │   └── contact/route.ts ← お問い合わせAPI（Slack通知+Supabaseリード保存）
+│   │   ├── sitemap.ts           ← 動的サイトマップ（22 URL）
+│   │   ├── robots.ts            ← robots.txt
+│   │   ├── opengraph-image.tsx  ← OGP画像（Edge Runtime動的生成）
 │   │   └── services/
 │   │       ├── page.tsx         ← サービス一覧
 │   │       ├── web/page.tsx
@@ -125,7 +143,9 @@ paradigmjpcom/
 │   │   ├── Header.tsx           ← 固定ヘッダー（デスクトップナビ+モバイルハンバーガー）
 │   │   └── Footer.tsx           ← 4カラムフッター（ブランド/サービス/企業情報/連絡先）
 │   └── lib/
-│       └── data.ts              ← コンテンツデータ定義（SERVICES/PRICING/FAQS/WORKS）
+│       ├── data.ts              ← コンテンツデータ定義（SERVICES/PRICING/FAQS/WORKS）
+│       ├── blog.ts              ← ブログ記事データ（4記事）
+│       └── jsonld.ts            ← JSON-LD構造化データ定義
 └── public/
 ```
 
@@ -173,13 +193,21 @@ paradigmjpcom/
 
 ---
 
+## 実装済み機能
+
+- ✅ `/blog` — 4記事（GEO解説/MEO基本/AI自動化/Next.js vs WordPress）、Markdown→HTMLレンダリング、BlogPosting JSON-LD
+- ✅ LP 4ページ — `/lp/web` `/lp/meo` `/lp/seo` `/lp/ai`（広告用、ペインポイント→ソリューション→料金→CTA構成）
+- ✅ フォームバックエンド — `POST /api/contact`（Slack #all-paradigm通知 + Supabase leads テーブル保存）
+- ✅ OGP画像 — `opengraph-image.tsx`（Edge Runtime動的生成、Paradigmブランドカラー）
+- ✅ 構造化データ — Organization/Services/FAQ/BreadcrumbList/BlogPosting（JSON-LD）
+- ✅ サイトマップ — `sitemap.ts`（22 URL、優先度/更新頻度付き）
+- ✅ robots.txt — `robots.ts`（/api/のみ除外）
+- ✅ Umami — layout.tsxにスクリプト埋め込み済み（`NEXT_PUBLIC_UMAMI_WEBSITE_ID`環境変数で有効化）
+
 ## 未実装（今後の予定）
 
-- `/blog` — Ghost連携 or MDX
-- LP（ランディングページ） — 広告キャンペーン用の個別サービスLP
-- フォームバックエンド — お問い合わせフォームのメール送信API接続
-- OGP画像 — 各ページ用のOG画像生成
-- 構造化データ — JSON-LD（Organization/Service/FAQ/BreadcrumbList）
-- サイトマップ — next-sitemap or app/sitemap.ts
-- Umami設置 — analytics.appexx.meでサイトID取得+スクリプト埋め込み
 - ラッコドメインNS変更 — Cloudflareネームサーバーへ変更（手動）
+- Umami Website ID設定 — analytics.appexx.meで新サイト追加+環境変数設定
+- Ghost連携 — ブログをGhost API経由に切り替え（現在は静的データ）
+- メール送信 — フォーム送信時にResend/SMTP経由で自動返信メール
+- パフォーマンス計測 — Lighthouse CI / Web Vitals監視
