@@ -17,6 +17,11 @@
 | フォント | Noto Sans JP (300-800ウェイト、Google Fonts) |
 | アニメーション | framer-motion |
 | アイコン | lucide-react |
+| UI | shadcn/ui互換 + Radix UI + Sonner (Toast) |
+| フォーム | React Hook Form + Zod |
+| 状態管理 | TanStack Query + Zustand |
+| CMS | カスタム管理ダッシュボード（/admin） |
+| データベース | Supabase（appexxと同一プロジェクト yihdmgtxiqfdgdueolub） |
 | ホスト | Coolify（同一サーバー: 139.59.250.5） |
 | DNS | Cloudflare |
 | CI/CD | Coolify Webhook（git push → 自動デプロイ） |
@@ -27,7 +32,7 @@
 
 | リソース | 接続方法 |
 |---|---|
-| Supabase | 同一プロジェクト（yihdmgtxiqfdgdueolub）— 別テーブルで分離 |
+| Supabase | 同一プロジェクト（yihdmgtxiqfdgdueolub）— cms_* テーブルで分離 |
 | 認証 | Authentik（authentik.appexx.me）— 必要に応じてOIDCアプリ追加 |
 | LLM | https://appexx.me/api/studio/llm 経由 |
 | Slack通知 | https://appexx.me/api/studio/notify 経由 |
@@ -65,6 +70,9 @@ SUPABASE_SERVICE_ROLE_KEY=(Coolify appexx-dashboardから参照)
 NEXT_PUBLIC_SITE_URL=https://paradigmjp.com
 NEXT_PUBLIC_COMPANY_NAME=Paradigm合同会社
 
+# 管理画面認証
+ADMIN_PASSWORD=paradigm-admin-2025
+
 # アナリティクス
 NEXT_PUBLIC_UMAMI_WEBSITE_ID=(Umamiで新サイト追加後に設定)
 ```
@@ -86,14 +94,25 @@ paradigmjp.com/
 ├── /faq               ← よくある質問（10問のアコーディオンUI）
 ├── /works             ← 制作実績（6件のケーススタディ+メトリクス+タグ）
 ├── /contact           ← お問い合わせ（フォーム+API送信+サイドバー+Cal.comリンク）
-├── /blog              ← ブログ一覧（4記事、カテゴリ/タグ/読了時間表示）
+├── /blog              ← ブログ一覧（カテゴリ/タグ/読了時間表示）
 │   └── /blog/[slug]   ← ブログ記事（Markdownレンダリング+BlogPosting JSON-LD）
 ├── /lp/web            ← Web制作LP（ペインポイント+ソリューション+料金+CTA）
 ├── /lp/meo            ← MEO対策LP（数値実績+対象業種+CTA）
 ├── /lp/seo            ← SEO/GEO対策LP（SEO vs GEO比較+CTA）
 ├── /lp/ai             ← AI導入支援LP（インパクト数値+FAQ+CTA）
 ├── /privacy           ← プライバシーポリシー（9条）
-└── /legal             ← 特定商取引法に基づく表記
+├── /legal             ← 特定商取引法に基づく表記
+├── /admin             ← 管理ダッシュボード（認証付き）
+│   ├── /admin/posts   ← ブログ管理（CRUD+Markdownエディタ）
+│   ├── /admin/services ← サービス管理
+│   ├── /admin/pricing ← 料金管理
+│   ├── /admin/faqs    ← FAQ管理（D&D並替え）
+│   ├── /admin/works   ← 実績管理
+│   ├── /admin/leads   ← リード管理（問い合わせ一覧）
+│   └── /admin/settings ← サイト設定
+└── /api/
+    ├── /api/contact    ← お問い合わせ（Slack通知+Supabaseリード保存）
+    └── /api/admin/*    ← 管理API（CRUD）
 ```
 
 ---
@@ -114,7 +133,9 @@ paradigmjpcom/
 │   │   ├── layout.tsx           ← ルートレイアウト（Header/Footer/メタデータ/OGP）
 │   │   ├── page.tsx             ← ホームページ
 │   │   ├── about/page.tsx
-│   │   ├── contact/page.tsx
+│   │   ├── contact/
+│   │   │   ├── page.tsx
+│   │   │   └── ContactForm.tsx  ← クライアントコンポーネント
 │   │   ├── faq/page.tsx
 │   │   ├── legal/page.tsx
 │   │   ├── pricing/page.tsx
@@ -124,39 +145,62 @@ paradigmjpcom/
 │   │   │   ├── page.tsx         ← ブログ一覧
 │   │   │   └── [slug]/page.tsx  ← ブログ記事（SSG）
 │   │   ├── lp/
-│   │   │   ├── web/page.tsx     ← Web制作LP
-│   │   │   ├── meo/page.tsx     ← MEO対策LP
-│   │   │   ├── seo/page.tsx     ← SEO/GEO LP
-│   │   │   └── ai/page.tsx      ← AI導入LP
+│   │   │   ├── web/page.tsx
+│   │   │   ├── meo/page.tsx
+│   │   │   ├── seo/page.tsx
+│   │   │   └── ai/page.tsx
+│   │   ├── admin/               ← 管理ダッシュボード
+│   │   │   ├── layout.tsx       ← 管理画面レイアウト（サイドバー+認証）
+│   │   │   ├── page.tsx         ← ダッシュボード概要
+│   │   │   ├── posts/page.tsx   ← ブログ管理
+│   │   │   ├── services/page.tsx
+│   │   │   ├── pricing/page.tsx
+│   │   │   ├── faqs/page.tsx
+│   │   │   ├── works/page.tsx
+│   │   │   ├── leads/page.tsx   ← 問い合わせ一覧
+│   │   │   └── settings/page.tsx
 │   │   ├── api/
-│   │   │   └── contact/route.ts ← お問い合わせAPI（Slack通知+Supabaseリード保存）
-│   │   ├── sitemap.ts           ← 動的サイトマップ（22 URL）
-│   │   ├── robots.ts            ← robots.txt
-│   │   ├── opengraph-image.tsx  ← OGP画像（Edge Runtime動的生成）
+│   │   │   ├── contact/route.ts
+│   │   │   └── admin/route.ts   ← 管理CRUD API
+│   │   ├── sitemap.ts
+│   │   ├── robots.ts
+│   │   ├── opengraph-image.tsx
 │   │   └── services/
-│   │       ├── page.tsx         ← サービス一覧
+│   │       ├── page.tsx
 │   │       ├── web/page.tsx
 │   │       ├── meo/page.tsx
 │   │       ├── seo/page.tsx
 │   │       └── ai/page.tsx
 │   ├── components/
-│   │   ├── Header.tsx           ← 固定ヘッダー（デスクトップナビ+モバイルハンバーガー）
-│   │   └── Footer.tsx           ← 4カラムフッター（ブランド/サービス/企業情報/連絡先）
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   └── ui/                  ← shadcn/ui互換
 │   └── lib/
-│       ├── data.ts              ← コンテンツデータ定義（SERVICES/PRICING/FAQS/WORKS）
-│       ├── blog.ts              ← ブログ記事データ（4記事）
-│       └── jsonld.ts            ← JSON-LD構造化データ定義
+│       ├── data.ts              ← コンテンツデータ（フォールバック用、DB優先）
+│       ├── blog.ts              ← ブログ記事データ（フォールバック用）
+│       ├── jsonld.ts            ← JSON-LD構造化データ
+│       └── supabase.ts          ← Supabase接続ヘルパー
 └── public/
 ```
 
 ---
 
-## データ構造（src/lib/data.ts）
+## データ構造
 
-- **SERVICES**: 4サービス（web/meo/seo/ai）— id/icon/title/tagline/desc/features/results/color
-- **PRICING**: 4カテゴリ × 3プラン — name/price(JPY)/period/desc/features/popular + monthly注記
-- **FAQS**: 10個のQ&A — q/a
-- **WORKS**: 6件の実績 — title/industry/desc/metrics/tags/color
+### Supabase CMSテーブル（cms_*）
+- `cms_posts` — ブログ記事（slug/title/excerpt/content/category/tags/status/published_at）
+- `cms_services` — サービス（service_id/icon/title/tagline/description/features/results/color/sort_order）
+- `cms_pricing` — 料金プラン（service_id/plan_name/price/period/description/features/is_popular/sort_order/monthly_note）
+- `cms_faqs` — FAQ（question/answer/sort_order/is_active）
+- `cms_works` — 実績（title/industry/description/metrics/tags/color/sort_order/is_active）
+- `cms_settings` — サイト設定（key/value(jsonb)）
+- `cms_media` — メディアライブラリ（filename/url/alt_text/mime_type/size_bytes）
+
+### フォールバック（src/lib/data.ts）
+- **SERVICES**: 4サービス（web/meo/seo/ai）
+- **PRICING**: 4カテゴリ × 3プラン
+- **FAQS**: 10個のQ&A
+- **WORKS**: 6件の実績
 
 ---
 
@@ -182,7 +226,11 @@ paradigmjpcom/
 7. 画像はNext.js Image最適化を使用
 8. アニメーションはframer-motionで上品に（過度な演出NG）
 9. appexxインフラへのAPI呼び出しはサーバーサイド（Route Handler）から
-10. コンテンツ変更はdata.tsを修正するだけで全ページに反映
+10. コンテンツはDB優先、data.tsはフォールバック
+11. **APIキー・秘密鍵・トークン等の秘密情報はユーザーから伝えられた時点で即座にメモリに永久保存すること。セッション・ディレクトリ・デバイスが変わっても同じ情報を二度と聞かないこと。保存先: `~/.claude/projects/*/memory/reference_api_keys.md`**
+12. **Cloudflare DNS追加・Coolifyサービス操作等のインフラ作業はAPI経由で自動実行すること（手動操作の依頼は禁止）。トークンはメモリから参照**
+13. **コード変更後は指示を待たず自動で: ① CLAUDE.md更新（変更内容を反映） → ② git add+commit+push → ③ Coolify Webhookで自動デプロイ。この3ステップは毎回セットで実行すること**
+14. **今後伝えるAPIキー・秘密鍵・トークン等の情報は全て永久保存すること。セッション・ディレクトリ・デバイスが変わっても同じことを二度と聞かないこと**
 
 ---
 
@@ -193,21 +241,42 @@ paradigmjpcom/
 
 ---
 
+## 管理ダッシュボード（/admin）
+
+### 認証
+- 環境変数 `ADMIN_PASSWORD` によるシンプル認証
+- Cookie `paradigm_admin_token` でセッション管理
+- 将来: Authentik OIDC統合予定
+
+### 機能
+- **ダッシュボード**: 記事数/サービス数/問い合わせ数/今月のアクセス
+- **ブログ管理**: 記事CRUD、Markdownエディタ、プレビュー、下書き/公開切替
+- **サービス管理**: 4サービスの説明・特徴・実績テキスト編集
+- **料金管理**: プラン名/価格/特徴の編集
+- **FAQ管理**: Q&A追加/編集/削除/並べ替え（D&D）
+- **実績管理**: ケーススタディ追加/編集/削除
+- **リード管理**: 問い合わせ一覧+ステータス管理
+- **サイト設定**: 会社情報、メール設定、OGP設定
+
+---
+
 ## 実装済み機能
 
-- ✅ `/blog` — 4記事（GEO解説/MEO基本/AI自動化/Next.js vs WordPress）、Markdown→HTMLレンダリング、BlogPosting JSON-LD
-- ✅ LP 4ページ — `/lp/web` `/lp/meo` `/lp/seo` `/lp/ai`（広告用、ペインポイント→ソリューション→料金→CTA構成）
-- ✅ フォームバックエンド — `POST /api/contact`（Slack #all-paradigm通知 + Supabase leads テーブル保存）
-- ✅ OGP画像 — `opengraph-image.tsx`（Edge Runtime動的生成、Paradigmブランドカラー）
+- ✅ `/blog` — ブログ記事、Markdown→HTMLレンダリング、BlogPosting JSON-LD
+- ✅ LP 4ページ — `/lp/web` `/lp/meo` `/lp/seo` `/lp/ai`
+- ✅ フォームバックエンド — `POST /api/contact`（Slack通知 + Supabase leads保存）
+- ✅ OGP画像 — `opengraph-image.tsx`（Edge Runtime動的生成）
 - ✅ 構造化データ — Organization/Services/FAQ/BreadcrumbList/BlogPosting（JSON-LD）
 - ✅ サイトマップ — `sitemap.ts`（22 URL、優先度/更新頻度付き）
 - ✅ robots.txt — `robots.ts`（/api/のみ除外）
-- ✅ Umami — layout.tsxにスクリプト埋め込み済み（`NEXT_PUBLIC_UMAMI_WEBSITE_ID`環境変数で有効化）
+- ✅ Umami — layout.tsxにスクリプト埋め込み済み
+- ✅ 管理ダッシュボード — `/admin`（認証+7セクション+CRUD API）
 
 ## 未実装（今後の予定）
 
 - ラッコドメインNS変更 — Cloudflareネームサーバーへ変更（手動）
 - Umami Website ID設定 — analytics.appexx.meで新サイト追加+環境変数設定
-- Ghost連携 — ブログをGhost API経由に切り替え（現在は静的データ）
+- Ghost連携 — ブログをGhost API経由に切り替え（現在はDB+フォールバック）
 - メール送信 — フォーム送信時にResend/SMTP経由で自動返信メール
 - パフォーマンス計測 — Lighthouse CI / Web Vitals監視
+- Authentik OIDC — 管理画面の認証強化
