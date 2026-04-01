@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { FAQS } from "@/lib/data"
+import { FAQ_JSONLD } from "@/lib/jsonld"
 
 export const metadata: Metadata = {
   title: "よくあるご質問",
@@ -42,6 +43,9 @@ export default function FaqPage() {
           </div>
         </div>
       </section>
+
+      {/* FAQ JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD(FAQS)) }} />
 
       {/* CTA */}
       <section className="py-20 px-6 bg-gray-50">
