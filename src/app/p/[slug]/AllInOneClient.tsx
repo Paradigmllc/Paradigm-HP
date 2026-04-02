@@ -258,8 +258,7 @@ function HeroSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) {
         </div>
 
         <p className="pp-hero-sub">
-          御社のウェブサイト・口コミ・デジタル環境を<br className="pp-br-md" />
-          AIが徹底分析し、最適な改善プランをご用意しました。
+          {tpl.hook_sub || "御社のウェブサイト・口コミ・デジタル環境をAIが徹底分析し、最適な改善プランをご用意しました。"}
         </p>
 
         {/* Key metrics */}
@@ -315,9 +314,9 @@ function DiagnosisSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }
         <AnimSection>
           <span className="pp-section-label" style={{ color: accent }}>ANALYSIS</span>
           <h2 className="pp-h2">
-            御社の<span style={{ color: accent }}>デジタル診断結果</span>
+            {tpl.pain_headline ? <span style={{ color: accent }}>{tpl.pain_headline}</span> : <>御社の<span style={{ color: accent }}>デジタル診断結果</span></>}
           </h2>
-          <p className="pp-lead">ウェブサイト、口コミ、セキュリティなど8項目をAIが自動診断しました。</p>
+          <p className="pp-lead">{tpl.pain_desc || "ウェブサイト、口コミ、セキュリティなど8項目をAIが自動診断しました。"}</p>
         </AnimSection>
 
         <AnimSection delay={0.15}>
@@ -486,8 +485,11 @@ function DemoSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) {
         <AnimSection>
           <span className="pp-section-label" style={{ color: accent }}>PREVIEW</span>
           <h2 className="pp-h2">
-            {d.business_name}様専用の<br />
-            <span style={{ color: accent }}>制作イメージ</span>
+            {tpl.reciprocity_headline ? (
+              <span style={{ color: accent }}>{tpl.reciprocity_headline}</span>
+            ) : (
+              <>{d.business_name}様専用の<br /><span style={{ color: accent }}>制作イメージ</span></>
+            )}
           </h2>
           <p className="pp-lead">
             御社の業種・立地・顧客層をもとに、実際にサイトを組み立てました。<br />
@@ -786,7 +788,10 @@ function ResultsSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) 
         <AnimSection>
           <span className="pp-section-label" style={{ color: accent }}>RESULTS</span>
           <h2 className="pp-h2">
-            多くの企業様に<br /><span style={{ color: accent }}>ご利用いただいています</span>
+            {tpl.bandwagon_headline
+              ? <span style={{ color: accent }}>{tpl.bandwagon_headline}</span>
+              : <>多くの企業様に<br /><span style={{ color: accent }}>ご利用いただいています</span></>
+            }
           </h2>
         </AnimSection>
 
@@ -1014,8 +1019,7 @@ function CTASection({ d, onCta, tpl }: { d: ProspectData; onCta: () => void; tpl
 
         <h2 className="pp-cta-title">まずは15分の<br />無料相談から</h2>
         <p className="pp-cta-lead">
-          初期費用ゼロ・最低契約期間なし。<br />
-          設定はすべて弊社が対応いたします。
+          {tpl.cta_subtitle || "初期費用ゼロ・最低契約期間なし。設定はすべて弊社が対応いたします。"}
         </p>
 
         {/* === メインコンテンツ切り替え === */}
@@ -1137,11 +1141,14 @@ function CTASection({ d, onCta, tpl }: { d: ProspectData; onCta: () => void; tpl
 
         {/* 安心ポイント */}
         <div className="pp-cta-trust">
-          {[
-            { icon: "🛡️", text: "個人情報は厳重に管理" },
-            { icon: "⏱️", text: "15分のお電話で完結" },
-            { icon: "🚫", text: "営業電話は一切なし" },
-          ].map((t, i) => (
+          {(tpl.trust_points?.length
+            ? tpl.trust_points.map(tp => ({ icon: tp.slice(0, 2), text: tp.slice(2).trim() }))
+            : [
+                { icon: "🛡️", text: "個人情報は厳重に管理" },
+                { icon: "⏱️", text: "15分のお電話で完結" },
+                { icon: "🚫", text: "営業電話は一切なし" },
+              ]
+          ).map((t, i) => (
             <div key={i} className="pp-cta-trust-item">
               <span>{t.icon}</span><span>{t.text}</span>
             </div>

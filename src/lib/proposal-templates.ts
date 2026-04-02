@@ -37,6 +37,15 @@ export interface ProposalTemplate {
   loss_context: string    // 損失フレームの文脈
   badge_features: { icon: string; title: string; sub: string }[]
   section_order: string[] // セクション表示順
+  // コピーライティングフィールド（DB管理）
+  hook_headline?: string        // フックキャッチコピー
+  hook_sub?: string             // フックサブテキスト
+  pain_headline?: string        // 痛点ヘッドライン
+  pain_desc?: string            // 痛点説明
+  reciprocity_headline?: string // 返報性ヘッドライン
+  bandwagon_headline?: string   // バンドワゴンヘッドライン
+  cta_subtitle?: string         // CTAサブテキスト
+  trust_points?: string[]       // 安心バッジ
 }
 
 export const PROPOSAL_TEMPLATES: ProposalTemplate[] = [
@@ -483,6 +492,14 @@ export function dbTemplateToProposal(dbTpl: Record<string, any>): ProposalTempla
     loss_context: dbTpl.loss_context || "",
     badge_features: dbTpl.badge_features || [],
     section_order: dbTpl.section_order || ["hook", "diagnostic", "reciprocity", "prospect", "bandwagon", "cta"],
+    hook_headline: dbTpl.hook_headline,
+    hook_sub: dbTpl.hook_sub,
+    pain_headline: dbTpl.pain_headline,
+    pain_desc: dbTpl.pain_desc,
+    reciprocity_headline: dbTpl.reciprocity_headline,
+    bandwagon_headline: dbTpl.bandwagon_headline,
+    cta_subtitle: dbTpl.cta_subtitle,
+    trust_points: dbTpl.trust_points,
   }
 }
 
