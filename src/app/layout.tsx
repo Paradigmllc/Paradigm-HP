@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import DifyChatbot from "@/components/DifyChatbot"
 import { ORGANIZATION_JSONLD, SERVICES_JSONLD } from "@/lib/jsonld"
 
 export const metadata: Metadata = {
@@ -40,6 +41,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="pt-16">{children}</main>
         <Footer />
+        {/* Dify チャットボットウィジェット（右下） */}
+        <DifyChatbot />
       </body>
     </html>
   )
