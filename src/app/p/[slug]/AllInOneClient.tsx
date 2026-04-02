@@ -190,7 +190,7 @@ function Nav({ name, accent }: { name: string; accent: string }) {
             { href: "#opportunity", label: "改善効果" },
             { href: "#market", label: "市場動向" },
             { href: "#results", label: "実績" },
-            { href: "#budget", label: "お見積もり" },
+            { href: "#whyus", label: "選ばれる理由" },
             { href: "#contact", label: "ご相談" },
           ].map(l => (
             <a key={l.href} href={l.href} className="pp-nav-link">{l.label}</a>
@@ -833,43 +833,70 @@ function ResultsSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) 
 // ═══════════════════════════════════════════════════════════════
 // 7.5 概算予算セクション
 // ═══════════════════════════════════════════════════════════════
-function BudgetSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) {
+function WhyUsSection({ d, tpl }: { d: ProspectData; tpl: ProposalTemplate }) {
   const ref = useRef<HTMLDivElement>(null)
   const vis = useVisible(ref, 0.1)
   const accent = d.template_accent || tpl.accent
-  const product = getProductInfo(d.primary_product)
+
+  const strengths = [
+    { icon: "🤖", title: "AI × 人のハイブリッド", desc: "最新AI技術を活用しつつ、経験豊富なプロが品質を担保。効率と品質を両立。" },
+    { icon: "📊", title: "データドリブンな改善提案", desc: "御社の課題をデータ分析で特定。感覚ではなく数値に基づいた施策をご提案。" },
+    { icon: "⚡", title: "圧倒的なスピード", desc: "一般的な制作会社の半分以下の期間で納品。AIツール活用で工数を大幅削減。" },
+    { icon: "🔄", title: "ワンストップ対応", desc: "Web制作・MEO・SEO・SNS・DXまで一社完結。複数社に依頼する手間とコストを削減。" },
+    { icon: "💬", title: "伴走型サポート", desc: "納品して終わりではなく、効果測定・改善提案まで継続的にサポート。" },
+    { icon: "🌏", title: "多言語・海外対応", desc: "英語・韓国語・中国語のコンテンツ制作やインバウンド集客にも対応可能。" },
+  ]
+
+  const comparison = [
+    { item: "AI活用による効率化", us: true, a: false, b: false },
+    { item: "データ分析に基づく改善提案", us: true, a: false, b: true },
+    { item: "Web制作+マーケ一括対応", us: true, a: false, b: false },
+    { item: "最短2週間の納品", us: true, a: false, b: false },
+    { item: "納品後の伴走サポート", us: true, a: true, b: false },
+    { item: "多言語・海外対応", us: true, a: false, b: false },
+    { item: "成果レポートの定期提出", us: true, a: true, b: true },
+    { item: "初期費用ゼロプランあり", us: true, a: false, b: true },
+  ]
 
   return (
     <AnimSection>
-      <section ref={ref} id="budget" className="pp-budget">
-        <div className="pp-section-inner">
-          <div className="pp-section-label" style={{ color: accent }}>PRICING</div>
-          <h2 className="pp-section-title">概算お見積もり</h2>
-          <p className="pp-section-subtitle">{d.business_name}様向け {product.name}</p>
+      <section ref={ref} id="whyus" className="pp-whyus">
+        <div className="pp-section-inner" style={{ maxWidth: 800 }}>
+          <div className="pp-section-label" style={{ color: accent }}>WHY PARADIGM</div>
+          <h2 className="pp-section-title">Paradigmが選ばれる理由</h2>
+          <p className="pp-section-subtitle">他社にはない強みで、{d.business_name}様のビジネスを加速します</p>
 
-          <div className={`pp-budget-card ${vis ? "pp-visible" : ""}`} style={{ borderColor: `${accent}20` }}>
-            <div className="pp-budget-header" style={{ background: `linear-gradient(135deg, ${accent}08, ${accent}03)` }}>
-              <div className="pp-budget-product-name" style={{ color: accent }}>{product.name}</div>
-              <div className="pp-budget-price">{product.budget}</div>
-              <div className="pp-budget-note">※ 規模・要件により変動します</div>
-            </div>
-            <div className="pp-budget-features">
-              <div className="pp-budget-features-title">含まれるもの</div>
-              {product.features.map((f, i) => (
-                <div key={i} className="pp-budget-feature">
-                  <span className="pp-budget-check" style={{ color: accent }}>✓</span>
-                  <span>{f}</span>
+          {/* 強み6つ */}
+          <div className={`pp-whyus-grid ${vis ? "pp-visible" : ""}`}>
+            {strengths.map((s, i) => (
+              <div key={i} className="pp-whyus-card" style={{ borderColor: `${accent}15` }}>
+                <div className="pp-whyus-icon" style={{ background: `${accent}08` }}>{s.icon}</div>
+                <div className="pp-whyus-title">{s.title}</div>
+                <div className="pp-whyus-desc">{s.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* 競合比較表 */}
+          <div className={`pp-compare ${vis ? "pp-visible" : ""}`}>
+            <h3 className="pp-compare-title">競合比較</h3>
+            <div className="pp-compare-table">
+              <div className="pp-compare-header">
+                <div className="pp-compare-cell pp-compare-label" />
+                <div className="pp-compare-cell pp-compare-us" style={{ background: accent, color: "#fff" }}>Paradigm</div>
+                <div className="pp-compare-cell pp-compare-other">A社</div>
+                <div className="pp-compare-cell pp-compare-other">B社</div>
+              </div>
+              {comparison.map((row, i) => (
+                <div key={i} className="pp-compare-row">
+                  <div className="pp-compare-cell pp-compare-label">{row.item}</div>
+                  <div className="pp-compare-cell pp-compare-us-val" style={{ background: `${accent}06` }}>
+                    <span style={{ color: accent, fontWeight: 800 }}>{row.us ? "○" : "—"}</span>
+                  </div>
+                  <div className="pp-compare-cell pp-compare-other-val">{row.a ? "○" : "—"}</div>
+                  <div className="pp-compare-cell pp-compare-other-val">{row.b ? "○" : "—"}</div>
                 </div>
               ))}
-            </div>
-            <div className="pp-budget-footer">
-              <div className="pp-budget-roi">
-                <span className="pp-budget-roi-label">想定ROI</span>
-                <span className="pp-budget-roi-val" style={{ color: accent }}>
-                  月間 ¥{d.estimated_monthly_loss.toLocaleString()} の改善効果
-                </span>
-              </div>
-              <p className="pp-budget-disclaimer">※ 正式なお見積もりは無料相談にてご案内します</p>
             </div>
           </div>
         </div>
@@ -1179,7 +1206,7 @@ export default function PersuasionPage({ data }: { data?: ProspectData }) {
       {vis("prospect") && <OpportunitySection d={d} tpl={tpl} />}
       {vis("market") && <MarketSection d={d} tpl={tpl} />}
       {vis("bandwagon") && <ResultsSection d={d} tpl={tpl} />}
-      {vis("cta") && <BudgetSection d={d} tpl={tpl} />}
+      {vis("cta") && <WhyUsSection d={d} tpl={tpl} />}
       {vis("cta") && <CTASection d={d} onCta={handleCTA} tpl={tpl} />}
     </>
   )
@@ -1521,13 +1548,42 @@ body{
 }
 
 /* ─── Budget ─── */
-.pp-budget{padding:80px clamp(20px,5vw,56px);background:#FAFBFD;}
-.pp-budget .pp-section-inner{max-width:640px;margin:0 auto;text-align:center;}
-.pp-budget .pp-section-label{font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:8px;}
-.pp-budget .pp-section-title{font-size:clamp(22px,3vw,30px);font-weight:800;color:#0f172a;margin-bottom:8px;letter-spacing:-.5px;}
-.pp-budget .pp-section-subtitle{font-size:14px;color:#64748b;margin-bottom:36px;}
-.pp-budget-card{
-  border:1.5px solid #e2e8f0;border-radius:20px;overflow:hidden;
+/* ─── Why Us ─── */
+.pp-whyus{padding:80px clamp(20px,5vw,56px);background:#FAFBFD;}
+.pp-whyus .pp-section-inner{margin:0 auto;text-align:center;}
+.pp-whyus .pp-section-label{font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:8px;}
+.pp-whyus .pp-section-title{font-size:clamp(22px,3vw,30px);font-weight:800;color:#0f172a;margin-bottom:8px;letter-spacing:-.5px;}
+.pp-whyus .pp-section-subtitle{font-size:14px;color:#64748b;margin-bottom:36px;}
+.pp-whyus-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px;
+  opacity:0;transform:translateY(20px);transition:all .6s;
+}
+.pp-whyus-grid.pp-visible{opacity:1;transform:translateY(0);}
+.pp-whyus-card{
+  background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;
+  padding:24px 20px;text-align:left;transition:all .25s;
+}
+.pp-whyus-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.06);}
+.pp-whyus-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;}
+.pp-whyus-title{font-size:14px;font-weight:800;color:#0f172a;margin-bottom:6px;letter-spacing:-.3px;}
+.pp-whyus-desc{font-size:12px;color:#64748b;line-height:1.7;}
+/* 比較表 */
+.pp-compare{
+  opacity:0;transform:translateY(20px);transition:all .6s .2s;
+}
+.pp-compare.pp-visible{opacity:1;transform:translateY(0);}
+.pp-compare-title{font-size:18px;font-weight:800;color:#0f172a;margin-bottom:20px;letter-spacing:-.3px;}
+.pp-compare-table{border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;text-align:center;}
+.pp-compare-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:2px solid #e2e8f0;}
+.pp-compare-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid #f1f5f9;}
+.pp-compare-row:last-child{border-bottom:none;}
+.pp-compare-cell{padding:12px 16px;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.pp-compare-label{justify-content:flex-start;font-weight:600;color:#334155;text-align:left;}
+.pp-compare-us{font-size:12px;font-weight:800;border-radius:0;letter-spacing:.5px;}
+.pp-compare-other{font-size:12px;font-weight:600;color:#94a3b8;background:#f8fafc;}
+.pp-compare-us-val{font-size:16px;}
+.pp-compare-other-val{font-size:14px;color:#cbd5e1;}
+.pp-UNUSED{  border:1.5px solid #e2e8f0;border-radius:20px;overflow:hidden;
   background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.05);
   text-align:left;
   opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.22,1,.36,1);
@@ -1699,9 +1755,10 @@ body{
   .pp-product-tag{padding:10px 16px;gap:10px;}
   .pp-product-icon{width:32px;height:32px;font-size:14px;}
   .pp-product-name{font-size:13px;}
-  .pp-budget-header{padding:24px 20px;}
-  .pp-budget-features{padding:20px;}
-  .pp-budget-footer{padding:16px 20px;}
+  .pp-whyus-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .pp-compare-header,.pp-compare-row{grid-template-columns:2fr 1fr 1fr 1fr;}
+  .pp-compare-cell{padding:10px 8px;font-size:11px;}
+  .pp-compare-label{font-size:11px;}
   .pp-market-grid{grid-template-columns:1fr 1fr;gap:8px;}
   .pp-review-grid{grid-template-columns:1fr;}
 }
