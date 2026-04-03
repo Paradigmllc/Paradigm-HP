@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 const LINKS = {
   services: [
@@ -19,6 +22,9 @@ const LINKS = {
 }
 
 export default function Footer() {
+  const pathname = usePathname()
+  if (pathname.startsWith("/p/")) return null
+
   return (
     <footer className="bg-primary text-white/70">
       <div className="max-w-6xl mx-auto px-6 py-16">

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { usePathname } from "next/navigation"
 
 // Difyアプリ設定（dify.appexx.me）
 const DIFY_BASE_URL = "https://dify.appexx.me"
@@ -18,7 +19,9 @@ const QUICK_QUESTIONS = [
 ]
 
 export default function DifyChatbot() {
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  if (pathname.startsWith("/p/")) return null
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
     { role: "bot", text: "こんにちは！Paradigm合同会社のAIアシスタントです。\nご質問をお選びいただくか、自由にメッセージをお送りください。" },
   ])

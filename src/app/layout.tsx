@@ -3,6 +3,7 @@ import "./globals.css"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import DifyChatbot from "@/components/DifyChatbot"
+import SiteWrapper from "@/components/SiteWrapper"
 import { ORGANIZATION_JSONLD, SERVICES_JSONLD } from "@/lib/jsonld"
 
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen">
         <Header />
-        <main className="pt-16">{children}</main>
+        <SiteWrapper>{children}</SiteWrapper>
         <Footer />
         {/* Dify チャットボットウィジェット（右下） */}
         <DifyChatbot />

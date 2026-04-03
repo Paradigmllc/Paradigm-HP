@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 
@@ -13,6 +14,8 @@ const NAV = [
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  if (pathname.startsWith("/p/")) return null
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
