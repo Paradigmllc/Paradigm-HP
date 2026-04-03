@@ -9,7 +9,6 @@ const LINKS = {
   ],
   company: [
     { href: "/about", label: "会社概要" },
-    { href: "/works", label: "制作実績" },
     { href: "/blog", label: "ブログ" },
     { href: "/contact", label: "お問い合わせ" },
   ],

@@ -50,18 +50,16 @@ export async function POST(req: NextRequest) {
 
       // ═══ ダッシュボード統計 ═══
       case "dashboard_stats": {
-        const [posts, services, faqs, works, leads] = await Promise.all([
+        const [posts, services, faqs, leads] = await Promise.all([
           db.from("cms_posts").select("id", { count: "exact", head: true }),
           db.from("cms_services").select("id", { count: "exact", head: true }),
           db.from("cms_faqs").select("id", { count: "exact", head: true }),
-          db.from("cms_works").select("id", { count: "exact", head: true }),
           db.from("leads").select("id", { count: "exact", head: true }).eq("source", "paradigmjp.com"),
         ])
         return NextResponse.json({
           posts: posts.count || 0,
           services: services.count || 0,
           faqs: faqs.count || 0,
-          works: works.count || 0,
           leads: leads.count || 0,
         })
       }

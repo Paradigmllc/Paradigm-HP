@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { SERVICES, WORKS } from "@/lib/data"
+import { SERVICES } from "@/lib/data"
 
 export default function HomePage() {
   return (
@@ -51,36 +51,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Works Preview */}
-      <section className="py-24 px-6 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-accent text-sm font-semibold tracking-widest uppercase mb-2">Works</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-primary">制作実績</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WORKS.slice(0, 3).map((w, i) => (
-              <div key={i} className="rounded-2xl bg-white border border-gray-100 p-8 hover:shadow-lg transition-all">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-accent/10 text-accent">{w.industry}</span>
-                  {w.tags.map(t => (
-                    <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-text-muted">{t}</span>
-                  ))}
-                </div>
-                <h3 className="font-bold text-primary text-lg mb-2">{w.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed mb-4">{w.desc}</p>
-                <p className="text-accent font-bold text-lg">{w.metrics}</p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link href="/works" className="text-accent font-semibold hover:underline">
-              全ての実績を見る &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Why Us */}
       <section className="py-24 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
@@ -113,8 +83,8 @@ export default function HomePage() {
             <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-accent px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all shadow-lg">
               無料相談を予約する
             </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-2 border border-white/30 hover:border-white/60 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all">
-              料金を見る
+            <Link href="/services" className="inline-flex items-center gap-2 border border-white/30 hover:border-white/60 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all">
+              サービスを見る
             </Link>
           </div>
         </div>

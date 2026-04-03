@@ -8,7 +8,6 @@ import {
   FileText,
   Briefcase,
   HelpCircle,
-  Award,
   Users,
   TrendingUp,
   ArrowRight,
@@ -19,7 +18,6 @@ interface Stats {
   posts: number;
   services: number;
   faqs: number;
-  works: number;
   leads: number;
 }
 
@@ -27,7 +25,6 @@ const STAT_CARDS = [
   { key: "posts" as const, label: "ブログ記事", icon: FileText, color: "bg-blue-500", href: "/admin/posts" },
   { key: "services" as const, label: "サービス", icon: Briefcase, color: "bg-indigo-500", href: "/admin/services" },
   { key: "faqs" as const, label: "FAQ", icon: HelpCircle, color: "bg-emerald-500", href: "/admin/faqs" },
-  { key: "works" as const, label: "実績", icon: Award, color: "bg-amber-500", href: "/admin/works" },
   { key: "leads" as const, label: "問い合わせ", icon: Users, color: "bg-rose-500", href: "/admin/leads" },
 ];
 
@@ -132,7 +129,6 @@ export default function AdminDashboard() {
           {[
             { label: "新規ブログ作成", href: "/admin/posts", color: "text-blue-600 bg-blue-50 hover:bg-blue-100" },
             { label: "FAQ追加", href: "/admin/faqs", color: "text-emerald-600 bg-emerald-50 hover:bg-emerald-100" },
-            { label: "実績追加", href: "/admin/works", color: "text-amber-600 bg-amber-50 hover:bg-amber-100" },
             { label: "リード確認", href: "/admin/leads", color: "text-rose-600 bg-rose-50 hover:bg-rose-100" },
           ].map((a) => (
             <Link
