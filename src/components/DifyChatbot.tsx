@@ -4,32 +4,31 @@ import { useState, useCallback, useRef, useEffect } from "react"
 import { usePathname } from "next/navigation"
 
 const QUICK_QUESTIONS = [
-  { icon: "💰", label: "見積もりについて", message: "サービスの見積もりについて教えてください" },
-  { icon: "🛠️", label: "サポート体制", message: "サポート体制について教えてください" },
-  { icon: "📋", label: "制作の流れ", message: "制作の流れを教えてください" },
-  { icon: "⏰", label: "納期について", message: "納期はどのくらいですか？" },
-  { icon: "🤖", label: "AI導入について", message: "AI導入支援について教えてください" },
-  { icon: "🔄", label: "修正・変更", message: "制作後の修正・変更は可能ですか？" },
+  { icon: "💰", label: "料金・見積もり", message: "ホームページ制作の料金を教えてください" },
+  { icon: "📋", label: "制作の流れ", message: "ホームページ制作の流れを教えてください" },
+  { icon: "⏰", label: "納期について", message: "ホームページの納期はどのくらいですか？" },
+  { icon: "📍", label: "MEO対策とは", message: "MEO対策とは何ですか？効果はありますか？" },
+  { icon: "🤖", label: "AI導入支援", message: "AI導入支援とは具体的にどんなことをしますか？" },
+  { icon: "🔄", label: "修正・保守", message: "制作後のサポートや修正対応はどうなっていますか？" },
 ]
 
 export default function DifyChatbot() {
-  // ── 全hookをreturnより前で宣言（React Rules of Hooks） ──
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
+  // デフォルトで開いた状態
+  const [open, setOpen] = useState(true)
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
-    { role: "bot", text: "こんにちは！Paradigm合同会社のAIアシスタントです。\nご質問をお選びいただくか、自由にメッセージをお送りください。" },
+    { role: "bot", text: "こんにちは！Paradigm合同会社のAIアシスタントです 👋\n\nWeb制作・MEO対策・SEO/GEO・AI導入支援について、何でもご質問ください。\n下のボタンからお選びいただくか、自由にメッセージをどうぞ。" },
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [conversationId, setConversationId] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  // メッセージ追加時に自動スクロール
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, open])
 
-  // /p/* ルートでは非表示（全hookの後でreturn）
+  // 提案ページでは非表示
   if (pathname.startsWith("/p/")) return null
 
   const sendMessage = async (text: string) => {
@@ -49,7 +48,7 @@ export default function DifyChatbot() {
       setMessages(prev => [...prev, { role: "bot", text: data.answer || "申し訳ありません、エラーが発生しました。" }])
       if (data.conversation_id) setConversationId(data.conversation_id)
     } catch {
-      setMessages(prev => [...prev, { role: "bot", text: "申し訳ありません、接続エラーが発生しました。しばらくしてからお試しください。\n\n📧 info@paradigmjp.com" }])
+      setMessages(prev => [...prev, { role: "bot", text: "申し訳ありません、接続エラーが発生しました。\n\n📧 info@paradigmjp.com" }])
     }
 
     setLoading(false)
@@ -57,11 +56,12 @@ export default function DifyChatbot() {
 
   const handleKey = useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(input) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, loading])
 
   return (
     <>
-      {/* フローティングボタン */}
+      {/* フローティングボタン（閉じた時のみ表示） */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -89,9 +89,9 @@ export default function DifyChatbot() {
         <div style={{
           position: "fixed", bottom: 24, right: 24, zIndex: 9999,
           width: 380, maxWidth: "calc(100vw - 32px)",
-          height: 560, maxHeight: "calc(100vh - 48px)",
+          height: 580, maxHeight: "calc(100vh - 48px)",
           background: "#fff", borderRadius: 20, overflow: "hidden",
-          boxShadow: "0 20px 60px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.05)",
+          boxShadow: "0 20px 60px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.06)",
           display: "flex", flexDirection: "column",
           fontFamily: "'Noto Sans JP', sans-serif",
           animation: "chatSlideUp .25s ease",
@@ -115,7 +115,7 @@ export default function DifyChatbot() {
                 <div style={{ fontWeight: 700, fontSize: 14 }}>Paradigm アシスタント</div>
                 <div style={{ fontSize: 11, opacity: .8, marginTop: 1, display: "flex", alignItems: "center", gap: 4 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
-                  AI対応中
+                  AI対応中 · すぐに返答します
                 </div>
               </div>
             </div>
@@ -141,12 +141,12 @@ export default function DifyChatbot() {
                   <div style={{
                     width: 28, height: 28, borderRadius: 8, flexShrink: 0, marginRight: 8, marginTop: 2,
                     background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13,
+                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff", fontWeight: 700,
                   }}>P</div>
                 )}
                 <div style={{
                   maxWidth: "80%", padding: "10px 14px", borderRadius: 16,
-                  fontSize: 13, lineHeight: 1.75, whiteSpace: "pre-wrap",
+                  fontSize: 13, lineHeight: 1.8, whiteSpace: "pre-wrap",
                   ...(m.role === "user"
                     ? { background: "#6366f1", color: "#fff", borderBottomRightRadius: 4 }
                     : { background: "#f3f4f6", color: "#1e293b", borderBottomLeftRadius: 4 }),
@@ -161,7 +161,7 @@ export default function DifyChatbot() {
                 <div style={{
                   width: 28, height: 28, borderRadius: 8, flexShrink: 0,
                   background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff",
+                  display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#fff", fontWeight: 700,
                 }}>P</div>
                 <div style={{ background: "#f3f4f6", borderRadius: 16, padding: "10px 16px", display: "flex", gap: 4 }}>
                   {[0, 1, 2].map(i => (
@@ -207,7 +207,7 @@ export default function DifyChatbot() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKey}
-                placeholder="メッセージを入力..."
+                placeholder="何でもご質問ください..."
                 disabled={loading}
                 style={{
                   flex: 1, height: 42, border: "1.5px solid #e5e7eb", borderRadius: 12,
@@ -238,7 +238,7 @@ export default function DifyChatbot() {
               </button>
             </div>
             <div style={{ fontSize: 10, color: "#94a3b8", textAlign: "center", marginTop: 8 }}>
-              Powered by Paradigm AI · <a href="/contact" style={{ color: "#6366f1", textDecoration: "none" }}>詳しい相談はこちら</a>
+              Powered by Paradigm AI · <a href="/contact" style={{ color: "#6366f1", textDecoration: "none" }}>詳しい相談はこちら →</a>
             </div>
           </div>
         </div>
