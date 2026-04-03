@@ -272,6 +272,13 @@ paradigmjpcom/
 - ✅ Umami — layout.tsxにスクリプト埋め込み済み
 - ✅ 管理ダッシュボード — `/admin`（認証+7セクション+CRUD API）
 
+## セッション20で実装した機能
+
+- ✅ **DifyChatbot デフォルト開放** — `useState(true)`に変更、初回訪問時からチャット展開
+- ✅ **チャットbot精度向上** — Geminiシステムプロンプト強化（料金/納期/FAQ詳細）、フォールバック7→13パターン
+- ✅ **デプロイ失敗修正** — `deploy.yml`ポーリングループ削除（Coolifyは`running:unknown`のみ返すため）
+- ✅ **framer-motion型修正** — `HomeClient.tsx`の`EASE as const`タプル型（nixpacksビルド対応）
+
 ## 未実装（今後の予定）
 
 - ラッコドメインNS変更 — Cloudflareネームサーバーへ変更（手動）
