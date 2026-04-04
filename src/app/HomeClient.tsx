@@ -128,6 +128,89 @@ const TESTIMONIALS = [
   { name: "EC運営者", location: "愛知県名古屋市", stars: 5, text: "GEO対策でChatGPT検索からの流入が急増。新しい集客チャンネルができました。" },
 ]
 
+// ── City lights bokeh background (replaces blocked external video)
+function CityLightsBackground() {
+  const lights = useMemo(() =>
+    Array.from({ length: 38 }, (_, i) => {
+      const colors = [
+        "rgba(255,200,80",   // warm yellow (building windows)
+        "rgba(255,160,50",   // orange (street lamps)
+        "rgba(180,210,255",  // cool blue (office lights)
+        "rgba(255,240,180",  // warm white
+        "rgba(140,180,255",  // neon blue
+        "rgba(255,120,80",   // neon orange
+      ]
+      return {
+        id: i,
+        x: `${2 + (i * 7.31) % 96}%`,
+        y: `${20 + (i * 5.73) % 65}%`,
+        size: 80 + (i * 41) % 160,
+        baseOpacity: 0.05 + (i * 0.018) % 0.13,
+        color: colors[i % colors.length],
+        dur: 3.5 + (i * 0.83) % 5,
+        delay: (i * 0.47) % 6,
+      }
+    })
+  , [])
+
+  // Light streaks at bottom (car trails)
+  const streaks = useMemo(() =>
+    Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      y: `${72 + i * 3}%`,
+      width: 80 + (i * 53) % 200,
+      delay: i * 1.2,
+      dur: 3 + i * 0.6,
+      color: i % 2 === 0 ? "rgba(255,200,80,0.25)" : "rgba(180,210,255,0.2)",
+    }))
+  , [])
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Horizon glow — simulates distant city skyline */}
+      <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-[rgba(20,10,40,0.9)] via-[rgba(30,20,60,0.4)] to-transparent" />
+      <div className="absolute bottom-[15%] inset-x-0 h-32 bg-gradient-to-t from-transparent via-[rgba(80,40,120,0.12)] to-transparent blur-xl" />
+
+      {/* Bokeh light blobs */}
+      {lights.map(l => (
+        <motion.div
+          key={l.id}
+          className="absolute rounded-full"
+          style={{
+            left: l.x,
+            top: l.y,
+            width: l.size,
+            height: l.size,
+            background: `radial-gradient(circle, ${l.color},0.85) 0%, ${l.color},0) 70%)`,
+            filter: "blur(22px)",
+            transform: "translate(-50%,-50%)",
+          }}
+          animate={{ opacity: [l.baseOpacity, l.baseOpacity * 2.2, l.baseOpacity] }}
+          transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+
+      {/* Car light streaks (bottom) */}
+      {streaks.map(s => (
+        <motion.div
+          key={s.id}
+          className="absolute rounded-full"
+          style={{
+            top: s.y,
+            left: "-5%",
+            width: s.width,
+            height: 3,
+            background: s.color,
+            filter: "blur(3px)",
+          }}
+          animate={{ x: ["0vw", "110vw"], opacity: [0, 1, 1, 0] }}
+          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: "linear", opacity: { times: [0, 0.1, 0.85, 1] } }}
+        />
+      ))}
+    </div>
+  )
+}
+
 // ── Sakura petals animation component
 function SakuraPetals() {
   const petals = useMemo(() =>
@@ -178,14 +261,8 @@ export default function HomeClient() {
 
       {/* ══ Hero ══ */}
       <section className="relative min-h-[92vh] flex items-center justify-center bg-[#05070d] overflow-hidden">
-        {/* City street video background */}
-        <video
-          autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
-          src="https://videos.pexels.com/video-files/3741911/3741911-hd_1920_1080_25fps.mp4"
-        />
-        {/* Dark overlay to keep text legible */}
-        <div className="absolute inset-0 bg-[#05070d]/60" />
+        {/* City lights bokeh animation */}
+        <CityLightsBackground />
         {/* Grid bg */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.05)_1px,transparent_1px)] bg-[size:64px_64px]" />
         {/* Glow */}
