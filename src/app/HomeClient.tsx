@@ -128,85 +128,22 @@ const TESTIMONIALS = [
   { name: "EC運営者", location: "愛知県名古屋市", stars: 5, text: "GEO対策でChatGPT検索からの流入が急増。新しい集客チャンネルができました。" },
 ]
 
-// ── City lights bokeh background (replaces blocked external video)
-function CityLightsBackground() {
-  const lights = useMemo(() =>
-    Array.from({ length: 38 }, (_, i) => {
-      const colors = [
-        "rgba(255,200,80",   // warm yellow (building windows)
-        "rgba(255,160,50",   // orange (street lamps)
-        "rgba(180,210,255",  // cool blue (office lights)
-        "rgba(255,240,180",  // warm white
-        "rgba(140,180,255",  // neon blue
-        "rgba(255,120,80",   // neon orange
-      ]
-      return {
-        id: i,
-        x: `${2 + (i * 7.31) % 96}%`,
-        y: `${20 + (i * 5.73) % 65}%`,
-        size: 80 + (i * 41) % 160,
-        baseOpacity: 0.05 + (i * 0.018) % 0.13,
-        color: colors[i % colors.length],
-        dur: 3.5 + (i * 0.83) % 5,
-        delay: (i * 0.47) % 6,
-      }
-    })
-  , [])
-
-  // Light streaks at bottom (car trails)
-  const streaks = useMemo(() =>
-    Array.from({ length: 6 }, (_, i) => ({
-      id: i,
-      y: `${72 + i * 3}%`,
-      width: 80 + (i * 53) % 200,
-      delay: i * 1.2,
-      dur: 3 + i * 0.6,
-      color: i % 2 === 0 ? "rgba(255,200,80,0.25)" : "rgba(180,210,255,0.2)",
-    }))
-  , [])
-
+// ── City photo background with Ken Burns zoom (Unsplash CDN allows hotlinking)
+function CityPhotoBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Horizon glow — simulates distant city skyline */}
-      <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-[rgba(20,10,40,0.9)] via-[rgba(30,20,60,0.4)] to-transparent" />
-      <div className="absolute bottom-[15%] inset-x-0 h-32 bg-gradient-to-t from-transparent via-[rgba(80,40,120,0.12)] to-transparent blur-xl" />
-
-      {/* Bokeh light blobs */}
-      {lights.map(l => (
-        <motion.div
-          key={l.id}
-          className="absolute rounded-full"
-          style={{
-            left: l.x,
-            top: l.y,
-            width: l.size,
-            height: l.size,
-            background: `radial-gradient(circle, ${l.color},0.85) 0%, ${l.color},0) 70%)`,
-            filter: "blur(22px)",
-            transform: "translate(-50%,-50%)",
-          }}
-          animate={{ opacity: [l.baseOpacity, l.baseOpacity * 2.2, l.baseOpacity] }}
-          transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: "easeInOut" }}
-        />
-      ))}
-
-      {/* Car light streaks (bottom) */}
-      {streaks.map(s => (
-        <motion.div
-          key={s.id}
-          className="absolute rounded-full"
-          style={{
-            top: s.y,
-            left: "-5%",
-            width: s.width,
-            height: 3,
-            background: s.color,
-            filter: "blur(3px)",
-          }}
-          animate={{ x: ["0vw", "110vw"], opacity: [0, 1, 1, 0] }}
-          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: "linear", opacity: { times: [0, 0.1, 0.85, 1] } }}
-        />
-      ))}
+      {/* Tokyo city night photo — Unsplash CDN is hotlink-friendly */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <motion.img
+        src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=85&fit=crop&crop=center"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.45, filter: "brightness(1.15) saturate(1.5) contrast(1.05)" }}
+        animate={{ scale: [1, 1.07] }}
+        transition={{ duration: 14, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
+      />
+      {/* Gradient overlay: lighter at top (show city), darker at center (text area) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#05070d]/35 via-[#05070d]/70 to-[#05070d]/88" />
     </div>
   )
 }
@@ -214,36 +151,39 @@ function CityLightsBackground() {
 // ── Sakura petals animation component
 function SakuraPetals() {
   const petals = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
+    Array.from({ length: 22 }, (_, i) => ({
       id: i,
-      left: `${5 + (i * 4.7) % 92}%`,
-      delay: (i * 0.43) % 9,
-      duration: 7 + (i * 1.3) % 7,
-      size: 10 + (i * 3) % 12,
-      rotateStart: (i * 37) % 360,
-      xWobble: [-15 + (i % 5) * 6, 10 - (i % 3) * 7, -8 + (i % 7) * 4, 5],
+      left: `${4 + (i * 4.37) % 90}%`,
+      // Shorter delay (max 3.5s) so petals appear quickly when user scrolls to section
+      delay: (i * 0.19) % 3.5,
+      duration: 8 + (i * 1.1) % 7,
+      // Bigger: 22–40px range (was 10–22px, too small to see)
+      size: 22 + (i * 7) % 19,
+      rotateStart: (i * 41) % 360,
+      xWobble: [-20 + (i % 5) * 9, 14 - (i % 3) * 11, -12 + (i % 7) * 5, 8, 0],
     }))
   , [])
 
+  // z-10 puts petals ABOVE the card content (which is z-auto/z-0)
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-10" aria-hidden>
       {petals.map(p => (
         <motion.span
           key={p.id}
           className="absolute"
-          style={{ left: p.left, top: -30, fontSize: p.size, lineHeight: 1 }}
+          style={{ left: p.left, top: -50, fontSize: p.size, lineHeight: 1 }}
           animate={{
-            y: ["0vh", "108vh"],
+            y: ["0px", "110vh"],
             rotate: [p.rotateStart, p.rotateStart + 540],
             x: p.xWobble,
-            opacity: [0, 0.85, 0.85, 0],
+            opacity: [0, 0.9, 0.9, 0],
           }}
           transition={{
             duration: p.duration,
             delay: p.delay,
             repeat: Infinity,
             ease: "linear",
-            opacity: { times: [0, 0.05, 0.85, 1] },
+            opacity: { times: [0, 0.04, 0.88, 1] },
           }}
         >
           🌸
@@ -261,8 +201,8 @@ export default function HomeClient() {
 
       {/* ══ Hero ══ */}
       <section className="relative min-h-[92vh] flex items-center justify-center bg-[#05070d] overflow-hidden">
-        {/* City lights bokeh animation */}
-        <CityLightsBackground />
+        {/* Tokyo city photo with Ken Burns zoom */}
+        <CityPhotoBackground />
         {/* Grid bg */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.05)_1px,transparent_1px)] bg-[size:64px_64px]" />
         {/* Glow */}
