@@ -148,48 +148,60 @@ function CityPhotoBackground() {
   )
 }
 
-// ── Sakura petals animation component
+// ── Sakura petals — pure CSS approach (same as proposal page, proven to work)
+const SAKURA_CSS = `
+@keyframes sakuraFall {
+  0%   { transform: translateY(-60px) rotate(0deg) translateX(0px); opacity: 0; }
+  8%   { opacity: 1; }
+  88%  { opacity: 0.65; }
+  100% { transform: translateY(110vh) rotate(540deg) translateX(70px); opacity: 0; }
+}
+.sakura-petal {
+  position: absolute;
+  top: -40px;
+  animation: sakuraFall linear infinite;
+  filter: blur(0.4px);
+  user-select: none;
+}
+`
+
 function SakuraPetals() {
   const petals = useMemo(() =>
-    Array.from({ length: 22 }, (_, i) => ({
+    Array.from({ length: 20 }, (_, i) => ({
       id: i,
-      left: `${4 + (i * 4.37) % 90}%`,
-      // Shorter delay (max 3.5s) so petals appear quickly when user scrolls to section
-      delay: (i * 0.19) % 3.5,
-      duration: 8 + (i * 1.1) % 7,
-      // Bigger: 22–40px range (was 10–22px, too small to see)
-      size: 22 + (i * 7) % 19,
-      rotateStart: (i * 41) % 360,
-      xWobble: [-20 + (i % 5) * 9, 14 - (i % 3) * 11, -12 + (i % 7) * 5, 8, 0],
+      left: `${4 + (i * 4.6) % 90}%`,
+      delay: `${(i * 0.42) % 4}s`,
+      duration: `${7 + (i * 1.1) % 7}s`,
+      fontSize: `${18 + (i * 5) % 16}px`,
+      opacity: 0.4 + (i % 3) * 0.15,
     }))
   , [])
 
-  // z-10 puts petals ABOVE the card content (which is z-auto/z-0)
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-10" aria-hidden>
-      {petals.map(p => (
-        <motion.span
-          key={p.id}
-          className="absolute"
-          style={{ left: p.left, top: -50, fontSize: p.size, lineHeight: 1 }}
-          animate={{
-            y: ["0px", "110vh"],
-            rotate: [p.rotateStart, p.rotateStart + 540],
-            x: p.xWobble,
-            opacity: [0, 0.9, 0.9, 0],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "linear",
-            opacity: { times: [0, 0.04, 0.88, 1] },
-          }}
-        >
-          🌸
-        </motion.span>
-      ))}
-    </div>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: SAKURA_CSS }} />
+      <div
+        className="absolute inset-0 pointer-events-none select-none overflow-hidden"
+        style={{ zIndex: 10 }}
+        aria-hidden
+      >
+        {petals.map(p => (
+          <span
+            key={p.id}
+            className="sakura-petal"
+            style={{
+              left: p.left,
+              fontSize: p.fontSize,
+              opacity: p.opacity,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
+            }}
+          >
+            🌸
+          </span>
+        ))}
+      </div>
+    </>
   )
 }
 
