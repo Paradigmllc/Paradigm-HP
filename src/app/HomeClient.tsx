@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion"
 import { ArrowRight, Sparkles, TrendingUp, Search, Bot, Globe, CheckCircle, Star, ChevronRight, Zap, Shield, Users } from "lucide-react"
@@ -128,6 +128,48 @@ const TESTIMONIALS = [
   { name: "EC運営者", location: "愛知県名古屋市", stars: 5, text: "GEO対策でChatGPT検索からの流入が急増。新しい集客チャンネルができました。" },
 ]
 
+// ── Sakura petals animation component
+function SakuraPetals() {
+  const petals = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: `${5 + (i * 4.7) % 92}%`,
+      delay: (i * 0.43) % 9,
+      duration: 7 + (i * 1.3) % 7,
+      size: 10 + (i * 3) % 12,
+      rotateStart: (i * 37) % 360,
+      xWobble: [-15 + (i % 5) * 6, 10 - (i % 3) * 7, -8 + (i % 7) * 4, 5],
+    }))
+  , [])
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
+      {petals.map(p => (
+        <motion.span
+          key={p.id}
+          className="absolute"
+          style={{ left: p.left, top: -30, fontSize: p.size, lineHeight: 1 }}
+          animate={{
+            y: ["0vh", "108vh"],
+            rotate: [p.rotateStart, p.rotateStart + 540],
+            x: p.xWobble,
+            opacity: [0, 0.85, 0.85, 0],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: "linear",
+            opacity: { times: [0, 0.05, 0.85, 1] },
+          }}
+        >
+          🌸
+        </motion.span>
+      ))}
+    </div>
+  )
+}
+
 export default function HomeClient() {
   const typingText = useTypingEffect(["MEO対策", "AI活用", "Web制作", "SEO/GEO"], 90, 1800)
 
@@ -136,6 +178,14 @@ export default function HomeClient() {
 
       {/* ══ Hero ══ */}
       <section className="relative min-h-[92vh] flex items-center justify-center bg-[#05070d] overflow-hidden">
+        {/* City street video background */}
+        <video
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
+          src="https://videos.pexels.com/video-files/3741911/3741911-hd_1920_1080_25fps.mp4"
+        />
+        {/* Dark overlay to keep text legible */}
+        <div className="absolute inset-0 bg-[#05070d]/60" />
         {/* Grid bg */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.05)_1px,transparent_1px)] bg-[size:64px_64px]" />
         {/* Glow */}
@@ -198,8 +248,9 @@ export default function HomeClient() {
       </section>
 
       {/* ══ Services ══ */}
-      <section className="py-28 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-28 px-6 bg-white overflow-hidden">
+        <SakuraPetals />
+        <div className="max-w-6xl mx-auto relative">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
             <p className="text-violet-600 text-xs font-bold tracking-[0.2em] uppercase mb-3">Services</p>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
@@ -269,8 +320,9 @@ export default function HomeClient() {
       </section>
 
       {/* ══ Testimonials ══ */}
-      <section className="py-28 px-6 bg-gradient-to-b from-slate-50 to-white">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-28 px-6 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+        <SakuraPetals />
+        <div className="max-w-6xl mx-auto relative">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
             <p className="text-violet-600 text-xs font-bold tracking-[0.2em] uppercase mb-3">Testimonials</p>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900">お客様の声</h2>
