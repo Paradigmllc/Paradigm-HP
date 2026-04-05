@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 import { FAQS } from "@/lib/data"
 import { FAQ_JSONLD } from "@/lib/jsonld"
 
@@ -11,14 +12,7 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="py-20 px-6 bg-gradient-to-br from-primary to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-accent-light text-sm font-semibold tracking-widest uppercase mb-3">FAQ</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">よくあるご質問</h1>
-          <p className="text-lg text-gray-300">お客様からよくいただくご質問にお答えします。</p>
-        </div>
-      </section>
+      <PageHero badge="FAQ" title="よくあるご質問" desc="お客様からよくいただくご質問にお答えします。" accent="emerald" />
 
       {/* FAQ List */}
       <section className="py-24 px-6 bg-white">

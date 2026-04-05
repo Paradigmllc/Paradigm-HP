@@ -32,3 +32,34 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* ── Page hero decorative blobs ── */
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -24px) scale(1.06); }
+  66%       { transform: translate(-16px, 12px) scale(0.96); }
+}
+@keyframes blobFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-28px, 16px) scale(1.04); }
+  66%       { transform: translate(22px, -12px) scale(0.97); }
+}
+@keyframes blobFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(14px, 20px) scale(1.08); }
+}
+.ph-blob-1 { animation: blobFloat  14s ease-in-out infinite; }
+.ph-blob-2 { animation: blobFloat2 18s ease-in-out infinite; }
+.ph-blob-3 { animation: blobFloat3 11s ease-in-out infinite; }
+
+/* ── Subtle section decorative patterns ── */
+.section-dots {
+  background-image: radial-gradient(circle, #6366f120 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.section-grid {
+  background-image:
+    linear-gradient(rgba(99,102,241,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}

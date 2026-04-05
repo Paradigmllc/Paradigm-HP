@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 
 export const metadata: Metadata = {
   title: "会社概要",
@@ -9,14 +10,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="py-20 px-6 bg-gradient-to-br from-primary to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-accent-light text-sm font-semibold tracking-widest uppercase mb-3">About</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">会社概要</h1>
-          <p className="text-lg text-gray-300">テクノロジーで、ビジネスの常識を変える。</p>
-        </div>
-      </section>
+      <PageHero badge="About" title="会社概要" desc="テクノロジーで、ビジネスの常識を変える。" />
 
       {/* Mission */}
       <section className="py-24 px-6 bg-white">
@@ -35,7 +29,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-20 px-6 bg-gray-50">
+      <section className="relative py-20 px-6 bg-gray-50 section-dots overflow-hidden">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-accent text-sm font-semibold tracking-widest uppercase mb-2">Values</p>

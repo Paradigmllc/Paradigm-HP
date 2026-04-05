@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 import { BLOG_POSTS } from "@/lib/blog"
 
 export const metadata: Metadata = {
@@ -17,13 +18,7 @@ const CAT_COLORS: Record<string, string> = {
 export default function BlogPage() {
   return (
     <>
-      <section className="py-20 px-6 bg-gradient-to-br from-primary to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-accent-light text-sm font-semibold tracking-widest uppercase mb-3">Blog</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">ブログ</h1>
-          <p className="text-lg text-gray-300">デジタルマーケティングの最新情報とノウハウ</p>
-        </div>
-      </section>
+      <PageHero badge="Blog" title="ブログ" desc="デジタルマーケティングの最新情報とノウハウ" accent="rose" />
 
       <section className="py-24 px-6 bg-white">
         <div className="max-w-4xl mx-auto">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 import { SERVICES } from "@/lib/data"
 
 export const metadata: Metadata = {
@@ -17,14 +18,7 @@ const COLOR_MAP: Record<string, string> = {
 export default function ServicesPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="py-20 px-6 bg-gradient-to-br from-primary to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-accent-light text-sm font-semibold tracking-widest uppercase mb-3">Services</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">サービス一覧</h1>
-          <p className="text-lg text-gray-300">デジタル技術で事業を加速する、4つのソリューション。</p>
-        </div>
-      </section>
+      <PageHero badge="Services" title="サービス一覧" desc="デジタル技術で事業を加速する、4つのソリューション。" accent="indigo" />
 
       {/* Services Grid */}
       <section className="py-24 px-6 bg-white">

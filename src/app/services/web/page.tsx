@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 import { SERVICES, PRICING } from "@/lib/data"
 
 export const metadata: Metadata = {
@@ -13,14 +14,7 @@ export default function WebServicePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="py-20 px-6 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-6xl block mb-4">{service.icon}</span>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{service.title}</h1>
-          <p className="text-xl text-indigo-200">{service.tagline}</p>
-        </div>
-      </section>
+      <PageHero badge="Web制作" title={service.title} desc={service.tagline} icon={service.icon} accent="indigo" />
 
       {/* Description */}
       <section className="py-20 px-6 bg-white">

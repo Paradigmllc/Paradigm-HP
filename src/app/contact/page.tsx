@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import PageHero from "@/components/PageHero"
 import { ContactForm } from "./ContactForm"
 
 export const metadata: Metadata = {
@@ -10,14 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="py-20 px-6 bg-gradient-to-br from-primary to-slate-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-accent-light text-sm font-semibold tracking-widest uppercase mb-3">Contact</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">お問い合わせ</h1>
-          <p className="text-lg text-gray-300">お気軽にご相談ください。初回30分のオンライン相談は無料です。</p>
-        </div>
-      </section>
+      <PageHero badge="Contact" title="お問い合わせ" desc="お気軽にご相談ください。初回30分のオンライン相談は無料です。" accent="violet" />
 
       <section className="py-24 px-6 bg-white">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-16">
