@@ -27,16 +27,23 @@ export default function Header() {
 
   const isHome = pathname === "/"
 
+  const transparent = isHome && !scrolled
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled || !isHome
-        ? "bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm"
-        : "bg-transparent border-b border-transparent"
+      transparent
+        ? "bg-transparent border-b border-transparent"
+        : "bg-white/90 backdrop-blur-xl border-b border-gray-100 shadow-sm"
     }`}>
-      <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
+      {/* Dark top gradient when hero photo is behind — ensures nav text is always readable */}
+      {transparent && (
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+      )}
+      <div className="relative max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-500 flex items-center justify-center text-white text-xs font-black shadow-md">P</div>
-          <span className={`text-base font-bold transition-colors ${scrolled || !isHome ? "text-slate-900" : "text-white"}`}>
+          <span className={`text-base font-bold transition-colors ${transparent ? "text-white" : "text-slate-900"}`}
+            style={transparent ? { textShadow: "0 1px 4px rgba(0,0,0,0.6)" } : {}}>
             Paradigm
           </span>
         </Link>
@@ -46,8 +53,9 @@ export default function Header() {
           {NAV.map(n => (
             <Link key={n.href} href={n.href}
               className={`text-sm font-medium transition-colors ${
-                scrolled || !isHome ? "text-slate-500 hover:text-slate-900" : "text-white/70 hover:text-white"
-              }`}>
+                transparent ? "text-white/90 hover:text-white" : "text-slate-500 hover:text-slate-900"
+              }`}
+              style={transparent ? { textShadow: "0 1px 3px rgba(0,0,0,0.7)" } : {}}>
               {n.label}
             </Link>
           ))}
@@ -62,7 +70,7 @@ export default function Header() {
 
         {/* Mobile Toggle */}
         <button onClick={() => setOpen(!open)}
-          className={`md:hidden transition-colors ${scrolled || !isHome ? "text-slate-700" : "text-white"}`}>
+          className={`md:hidden transition-colors ${transparent ? "text-white" : "text-slate-700"}`}>
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
