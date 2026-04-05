@@ -182,7 +182,7 @@ function SakuraPetals() {
       <style dangerouslySetInnerHTML={{ __html: SAKURA_CSS }} />
       <div
         className="absolute inset-0 pointer-events-none select-none overflow-hidden"
-        style={{ zIndex: 10 }}
+        style={{ zIndex: 0 }}
         aria-hidden
       >
         {petals.map(p => (
@@ -279,7 +279,7 @@ export default function HomeClient() {
       {/* ══ Services ══ */}
       <section className="relative py-28 px-6 bg-white overflow-hidden">
         <SakuraPetals />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
             <p className="text-violet-600 text-xs font-bold tracking-[0.2em] uppercase mb-3">Services</p>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
@@ -351,7 +351,7 @@ export default function HomeClient() {
       {/* ══ Testimonials ══ */}
       <section className="relative py-28 px-6 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <SakuraPetals />
-        <div className="max-w-6xl mx-auto relative">
+        <div className="max-w-6xl mx-auto relative z-10">
           <motion.div className="text-center mb-16" initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeUp}>
             <p className="text-violet-600 text-xs font-bold tracking-[0.2em] uppercase mb-3">Testimonials</p>
             <h2 className="text-3xl md:text-5xl font-black text-slate-900">お客様の声</h2>

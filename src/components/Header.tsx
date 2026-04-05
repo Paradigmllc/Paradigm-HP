@@ -37,7 +37,7 @@ export default function Header() {
     }`}>
       {/* Dark top gradient when hero photo is behind — ensures nav text is always readable */}
       {transparent && (
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
       )}
       <div className="relative max-w-6xl mx-auto flex items-center justify-between h-16 px-6">
         <Link href="/" className="flex items-center gap-2">
